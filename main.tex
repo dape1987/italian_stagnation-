@@ -1,0 +1,554 @@
+% Capire la stagnazione italiana — discussione di Krahé (2023)
+% Compilare con pdfLaTeX + BibTeX (impostazione predefinita di Overleaf).
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{booktabs,tabularx,array}
+\usepackage{pgfplots}
+\usetikzlibrary{positioning}
+\pgfplotsset{compat=1.18}
+\usepackage[round]{natbib}
+
+% \setbeameroption{show notes on second screen=right} % note del relatore
+
+% --- Aspetto ---------------------------------------------------------------
+\definecolor{ink}{HTML}{1B2130}
+\definecolor{body}{HTML}{454B58}
+\definecolor{muted}{HTML}{5F6573}
+\definecolor{paper}{HTML}{F7F6F2}
+\definecolor{paper2}{HTML}{ECEAE3}
+\definecolor{navy}{HTML}{1E3553}
+\definecolor{onnavy}{HTML}{F2EFE8}
+\definecolor{accent}{HTML}{A94A26}
+\definecolor{accentlight}{HTML}{E0A27E}
+\definecolor{rulegray}{HTML}{C8C4B9}
+\definecolor{bargray}{HTML}{A7ADB8}
+
+\setbeamercolor{background canvas}{bg=paper}
+\setbeamercolor{normal text}{fg=body}
+\setbeamercolor{frametitle}{fg=ink}
+\setbeamercolor{framesubtitle}{fg=accent}
+\setbeamercolor{title}{fg=onnavy}
+\setbeamercolor{itemize item}{fg=accent}
+\setbeamercolor{enumerate item}{fg=accent}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\scriptsize,series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}{\textbullet}
+\setbeamersize{text margin left=1.2cm,text margin right=1.2cm}
+
+% Il sottotitolo della frame compare sopra il titolo, come etichetta di sezione
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.9em}%
+  \ifx\insertframesubtitle\@empty\else
+    {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\MakeUppercase{\insertframesubtitle}\par}\vspace{0.3em}%
+  \fi
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}%
+  \vspace{0.2em}%
+}
+\makeatother
+
+\setbeamertemplate{footline}{%
+  \hspace{1.2cm}\hfill{\tiny\color{muted}\insertframenumber}\hspace{1.2cm}\vspace{0.5cm}%
+}
+
+% --- Comandi ----------------------------------------------------------------
+\newcommand{\fonte}[1]{\vfill{\tiny\color{muted}#1\par}}
+\newcommand{\bignum}[1]{{\color{accent}\fontsize{18}{21}\selectfont\bfseries #1}}
+\newcommand{\hugenum}[1]{{\color{accent}\fontsize{28}{32}\selectfont\bfseries #1}}
+\newcommand{\cardrule}{{\color{ink}\rule{\linewidth}{0.8pt}}\par\vspace{0.4em}}
+\newcommand{\card}[2]{\cardrule{\raggedright\color{ink}\bfseries #1\par}\vspace{0.3em}{\small\raggedright #2\par}}
+\newcommand{\statcard}[2]{\cardrule\bignum{#1}\par\vspace{0.3em}{\small\raggedright #2\par}}
+\newcommand{\nota}[1]{{\setlength{\fboxsep}{7pt}\colorbox{paper2}{\parbox{\dimexpr\linewidth-14pt}{\small\raggedright #1}}}}
+\newcommand{\riga}[2]{{\color{rulegray}\rule{\linewidth}{0.5pt}}\par\vspace{0.1em}%
+  \begin{minipage}[t]{0.25\linewidth}\raggedright\small\leavevmode\color{ink}\bfseries #1\end{minipage}\hfill
+  \begin{minipage}[t]{0.72\linewidth}\raggedright\small #2\end{minipage}\par\vspace{0.35em}}
+\newcommand{\passo}[2]{\parbox[t][2.1cm][t]{0.19\textwidth}{\raggedright\small{\color{ink}\bfseries #1}\\[0.3em]#2}}
+\newcommand{\darkslide}{\setbeamercolor{background canvas}{bg=navy}%
+  \setbeamercolor{normal text}{fg=onnavy}\setbeamercolor{frametitle}{fg=onnavy}%
+  \setbeamercolor{framesubtitle}{fg=accentlight}\usebeamercolor[fg]{normal text}}
+\newcommand{\altslide}{\setbeamercolor{background canvas}{bg=paper2}}
+
+\pgfplotsset{
+  barre/.style={
+    xbar, y dir=reverse, xmin=0, point meta=x,
+    axis x line=none, axis y line=left, y axis line style={draw=none}, ytick style={draw=none},
+    bar width=11pt, enlarge y limits=0.15,
+    yticklabel style={font=\small, text=ink, align=right},
+    nodes near coords, nodes near coords align={horizontal},
+    every node near coord/.append style={font=\small\bfseries, text=ink},
+    width=0.6\textwidth,
+  }
+}
+
+\title{Capire la stagnazione italiana}
+\subtitle{Una discussione di Krahé (2023), \emph{Understanding Italy’s Stagnation}, come punto di partenza per un progetto di ricerca di lungo periodo}
+\author{[Relatore]}
+\institute{Banca d’Italia · Divisione Storia Economica}
+\date{[data]}
+
+\begin{document}
+
+% ============================================================================
+{\darkslide
+\begin{frame}[plain]
+  \vfill
+  {\scriptsize\bfseries\color{accentlight}SEMINARIO INTERNO · DIVISIONE STORIA ECONOMICA\par}
+  \vspace{0.6em}
+  {\fontsize{34}{38}\selectfont\bfseries\color{onnavy}\inserttitle\par}
+  \vspace{0.8em}
+  {\large\color{onnavy!80}\insertsubtitle\par}
+  \vspace{2em}
+  {\small\color{onnavy!80}\insertauthor\ · \insertinstitute\ · \insertdate\par}
+  \vspace{1.5em}
+  \note{Obiettivo: usare il paper di Krahé come mappa ragionata delle spiegazioni della stagnazione italiana e chiederci quali ipotesi possiamo mettere alla prova con gli strumenti della storia economica. Circa 25 minuti, poi discussione.}
+\end{frame}
+}
+
+% ============================================================================
+\begin{frame}{Perché partire da questo paper}{Introduzione}
+  \vspace{1em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    \card{Una rassegna, non un test}{Riassume, confronta e valuta le principali spiegazioni della stagnazione. Non propone nuove stime sulla produttività.}
+    \column{0.31\textwidth}
+    \card{Una tesi netta}{Nessuna famiglia di spiegazioni, presa da sola, rende conto del livello, del timing e della persistenza del rallentamento.}
+    \column{0.31\textwidth}
+    \card{Una mappa per noi}{Ogni spiegazione è un’ipotesi storica che si può verificare su dati, imprese e archivi di lungo periodo.}
+  \end{columns}
+  \vfill
+  {\scriptsize\color{muted}Percorso: il fatto da spiegare $\rightarrow$ tre famiglie di spiegazioni $\rightarrow$ bilancio e sintesi $\rightarrow$ limiti e agenda di ricerca\par}
+  \fonte{\citet{krahe2023}, Dezernat Zukunft, Background Paper}
+  \note{Krahé dirige la ricerca di Dezernat Zukunft, un think tank tedesco: il paper nasce per un pubblico tedesco, dove prevale la lettura “l’Italia non vuole riformarsi”. È una rassegna critica, utile perché mette in fila le spiegazioni e ne mostra i limiti.}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{La produttività oraria si è fermata intorno al 2000}{Il fatto da spiegare}
+  \begin{columns}[c]
+    \column{0.62\textwidth}
+    {\scriptsize\color{muted}PIL reale per ora lavorata, variazione 1999–2019\par}
+    \begin{tikzpicture}
+      \begin{axis}[barre, xmax=27, symbolic y coords={Germania,Francia,Spagna,Italia}, ytick={Germania,Francia,Spagna,Italia},
+          height=5.2cm, nodes near coords={+\pgfmathprintnumber{\pgfplotspointmeta}\%}]
+        \addplot[fill=bargray, draw=none, bar shift=0pt] coordinates {(22,Germania) (21,Francia) (17,Spagna)};
+        \addplot[fill=accent, draw=none, bar shift=0pt] coordinates {(5,Italia)};
+      \end{axis}
+    \end{tikzpicture}
+    \column{0.34\textwidth}
+    \cardrule
+    \hugenum{$\approx$\,300 anni}\par\vspace{0.4em}
+    {\small per raddoppiare la produttività al ritmo italiano del 1999–2019. Circa 70 anni per Germania e Francia, 90 per la Spagna.\par}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, elaborazioni su dati AMECO}
+  \note{Il fenomeno centrale è la produttività oraria. Krahé preferisce il PIL per ora alla TFP per i problemi di misura dello stock di capitale; secondo l’FMI la TFP sarebbe scesa del 13,5\% tra 2000 e 2019. Il divario riguarda manifattura e servizi privati.}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Tre fasi: aggancio, distacco, stallo}{Il fatto da spiegare}
+  \vspace{1em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    \statcard{fino al 1980}{Crescita della produttività in linea con le altre economie europee avanzate.}
+    \column{0.31\textwidth}
+    \statcard{1980–2000}{L’Italia perde contatto con la frontiera ma cresce ancora: +1,4\% l’anno nel 1989–99, +1,9\% nel 1986–96.}
+    \column{0.31\textwidth}
+    \statcard{dal 2000}{Produttività quasi ferma: +0,3\% l’anno nel 1999–2008, +0,2\% nel 2008–21. Nessuna rottura nel 2008.}
+  \end{columns}
+  \vfill
+  \nota{2000–2008: la crescita è solo estensiva, trainata dalle ore lavorate. Dopo il 2008 si fermano anche le ore e il PIL reale ristagna.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~3, su dati AMECO}
+  \note{La rottura vera è intorno al 2000, non al 2008: la crisi finanziaria colpisce le ore lavorate, non il trend della produttività. Domanda per noi: uno o due fenomeni distinti?}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Non è l’inflazione, e non è solo il Mezzogiorno}{Il fatto da spiegare}
+  \vspace{0.6em}
+  \small
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright}p{0.2\textwidth}>{\raggedright}X>{\raggedright\arraybackslash}p{0.14\textwidth}@{}}
+    \toprule
+    \color{ink}\bfseries Fattore & \color{ink}\bfseries Evidenza & \color{ink}\bfseries Peso \\
+    \midrule
+    Inflazione & 1,7\% l’anno nel 1999–2019, in linea con l’obiettivo della BCE & Neutrale \\[0.4em]
+    Ore lavorate & +8,5\% nel 1999–2008, $-$4,8\% nel 2008–19: più part-time e lavoro intermittente & Secondario \\[0.4em]
+    Produttività oraria & +5\% nel 1999–2019, contro +17–22\% in Spagna, Francia e Germania & Centrale \\[0.4em]
+    Geografia & Anche il Nord-Est, l’area più dinamica, cresce solo del 9\% nel 2000–19 & Nazionale \\
+    \bottomrule
+  \end{tabularx}
+  \fonte{Fonte: \citet{krahe2023}, sez.~3, su dati AMECO e Istat}
+  \note{Le ore crescono fino al 2008 e poi calano per effetto di composizione: più part-time e lavoro intermittente, ore settimanali per tipo di contratto costanti. Il Mezzogiorno perde terreno, ma anche il Nord-Est cresce meno dei paesi pari.}
+\end{frame}
+
+% ============================================================================
+{\altslide
+\begin{frame}{Un potenziale di lavoro inutilizzato, ma non è la causa}{Il fatto da spiegare}
+  \vspace{1em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    \statcard{$\approx$\,60\%}{tasso di occupazione 15–64 anni: sesto più basso su 38 paesi OCSE (media 69,4\%)}
+    \column{0.31\textwidth}
+    \statcard{23,5\%}{giovani 15–29 anni che non lavorano né studiano nel 2019 (OCSE 12,9\%)}
+    \column{0.31\textwidth}
+    \statcard{50\%}{tasso di occupazione femminile nel 2019 (OCSE 61\%, Francia 64\%, Germania 72\%)}
+  \end{columns}
+  \vfill
+  \nota{Il divario femminile si stava lentamente chiudendo prima del Covid: spiega un livello basso del prodotto, non il rallentamento dopo il 2000.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~3, su dati OCSE, Istat ed Eurostat}
+\end{frame}
+}
+
+% ============================================================================
+\begin{frame}{Il problema del debito è un problema di crescita}{Perché conta}
+  \begin{columns}[c]
+    \column{0.62\textwidth}
+    {\scriptsize\color{muted}Debito pubblico in \% del PIL nel 2021, scenari controfattuali dal 2008\par}
+    \begin{tikzpicture}
+      \begin{axis}[barre, xmax=185, height=5.4cm,
+          symbolic y coords={Effettivo,Con i tassi tedeschi,Con la crescita tedesca,Con entrambi},
+          ytick={Effettivo,Con i tassi tedeschi,Con la crescita tedesca,Con entrambi},
+          nodes near coords={\pgfmathprintnumber{\pgfplotspointmeta}\%}]
+        \addplot[fill=accent, draw=none, bar shift=0pt] coordinates {(151,Effettivo)};
+        \addplot[fill=bargray, draw=none, bar shift=0pt] coordinates {(133,Con i tassi tedeschi) (117,Con la crescita tedesca) (99,Con entrambi)};
+      \end{axis}
+    \end{tikzpicture}
+    \column{0.34\textwidth}
+    \cardrule
+    {\small Un consolidamento ex ante del 3\% del PIL nel 2009 avrebbe ridotto il rapporto di soli 4–11 punti entro il 2021.\par\vspace{0.6em}
+    Fino a 35 punti solo con moltiplicatori e isteresi molto ottimistici.\par}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, fig.~4; ipotesi conservative, dati AMECO. Crescita = PIL nominale}
+  \note{Con la crescita nominale tedesca dal 2008 il debito sarebbe di 34 punti più basso; con i tassi tedeschi di 18; con entrambi di 52. L’Italia ha avuto il più alto avanzo primario medio del G7 tra 1991 e 2019.}
+\end{frame}
+
+% ============================================================================
+{\darkslide
+\begin{frame}{Tre famiglie di spiegazioni}{Le spiegazioni}
+  \vspace{1em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    {\color{onnavy!70}\rule{\linewidth}{0.8pt}}\par\vspace{0.4em}
+    {\color{accentlight}\fontsize{24}{26}\selectfont\bfseries 1\par}\vspace{0.3em}
+    {\bfseries Mancanza di riforme\par}\vspace{0.3em}
+    {\small Regole rigide su lavoro e mercati dei prodotti, welfare costoso: capitale e lavoro allocati male. Prevale nel dibattito tedesco.\par}
+    \column{0.31\textwidth}
+    {\color{onnavy!70}\rule{\linewidth}{0.8pt}}\par\vspace{0.4em}
+    {\color{accentlight}\fontsize{24}{26}\selectfont\bfseries 2\par}\vspace{0.3em}
+    {\bfseries Integrazione nell’euro\par}\vspace{0.3em}
+    {\small Interazione tra l’economia politica italiana e il percorso per entrare, e restare, nell’unione monetaria. Diffusa nel dibattito italiano.\par}
+    \column{0.31\textwidth}
+    {\color{onnavy!70}\rule{\linewidth}{0.8pt}}\par\vspace{0.4em}
+    {\color{accentlight}\fontsize{24}{26}\selectfont\bfseries 3\par}\vspace{0.3em}
+    {\bfseries Prospettiva d’impresa\par}\vspace{0.3em}
+    {\small Dimensione, gestione e investimenti delle imprese, e l’ambiente istituzionale in cui operano. Dominante nell’economia empirica.\par}
+  \end{columns}
+  \vfill
+  {\small Non esaustive né mutuamente esclusive: partendo da punti diversi, le spiegazioni plausibili finiscono per sovrapporsi.\par}
+  \vspace{1em}
+\end{frame}
+}
+
+% ============================================================================
+\begin{frame}{La tesi: l’Italia non ha voluto riformarsi}{1 · Mancanza di riforme}
+  \vspace{0.6em}
+  {\large\color{ink}\bfseries Tutele rigide dell’impiego, sindacati forti, pensioni generose e mercati dei prodotti protetti impediscono una buona allocazione di capitale e lavoro.\par}
+  \vspace{0.5em}
+  {\scriptsize\color{muted}\citet{daveri2000}; \citet{alesina2006}; \citet{oecd2012}; \citet{tokarski2019}\par}
+  \vfill
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \card{Incompleta}{Negli ultimi trent’anni le riforme ci sono state, e molte.}
+    \column{0.47\textwidth}
+    \card{Fuorviante}{È proprio la natura delle riforme fatte a offrire l’indizio più utile sulle cause.}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.1}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{In realtà, trent’anni di riforme profonde}{1 · Mancanza di riforme}
+  \vspace{0.4em}
+  \scriptsize
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright}p{0.15\textwidth}>{\raggedright}X>{\raggedright\arraybackslash}p{0.32\textwidth}@{}}
+    \toprule
+    \color{ink}\bfseries Area & \color{ink}\bfseries Che cosa è stato fatto & \color{ink}\bfseries Un indicatore \\
+    \midrule
+    Finanza pubblica & Consolidamenti 1992–2009 per circa il 24\% del PIL; pareggio di bilancio in Costituzione (2012) & Avanzo primario medio più alto del G7 (1991–2019) \\[0.4em]
+    Pensioni & Riforme 1992, 1995, 2005, 2011; passaggio al sistema contributivo & Occupati 55–64 anni: meno del 30\% (2000), 54\% (2019) \\[0.4em]
+    Lavoro & Pacchetto Treu (1997), legge Biagi (2003), riforma Fornero (2012), Jobs Act (2015) & Indice OCSE di protezione, contratti a termine: 4,88 (1990), 1,63 (2015) \\[0.4em]
+    Concorrenza & Privatizzazioni seconde solo al Regno Unito per proventi; leggi Bersani (2006–07) & Indice OCSE PMR: 2,36 (1998), 1,29 (2013) \\[0.4em]
+    Sistema politico & Nuove leggi elettorali, finanziamento dei partiti, vincolo esterno europeo & Corruzione percepita: dal 72° (2012) al 42° posto (2021) \\
+    \bottomrule
+  \end{tabularx}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.1; \citet{devries2011}; OCSE; Transparency International}
+  \note{Le riforme nascono dalle crisi del 1992 (Mani Pulite e la lira). Filo comune: liberalizzazione e disciplina fiscale. L’indice per i contratti a termine è poi risalito a 3,13 con il decreto Dignità (2018).}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Le riforme hanno spostato rendite, non la produttività}{1 · Mancanza di riforme}
+  \vspace{0.6em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    \statcard{58\% $\rightarrow$ 53\%}{quota del lavoro sul PIL dal 1990 a oggi}
+    \column{0.31\textwidth}
+    \statcard{10\% $\rightarrow$ 60\%+}{quota di contratti a termine tra i giovani}
+    \column{0.31\textwidth}
+    \statcard{10\% $\rightarrow$ 30\%+}{quota di contratti part-time tra le donne}
+  \end{columns}
+  \vspace{1em}
+  {\small La riforma del 2001 ha trasferito rendite dai nuovi lavoratori alle imprese senza aumentare l’occupazione \citep{daruich2022}. I contratti a termine raramente fanno da trampolino.\par}
+  \vfill
+  \nota{\color{ink}\bfseries La domanda giusta: perché le riforme fatte non hanno sollevato la produttività?}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.1, fig.~11; AMECO; OCSE}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Quattro varianti di una stessa idea}{2 · Integrazione nell’euro}
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \card{Salari e competitività}{Inflazione salariale nel settore pubblico e nei servizi protetti, con cambio fisso: perdita di competitività.\\[0.2em]{\scriptsize\color{muted}\citet{hancke2013}; \citet{hopner2018}; \citet{wyplosz2013}}}
+    \vspace{0.8em}
+    \card{Modelli di crescita}{L’unione monetaria comprime la domanda pubblica, i consumi via salari e l’export, senza più svalutazioni.\\[0.2em]{\scriptsize\color{muted}\citet{baccaro2016}; \citet{storm2019}}}
+    \column{0.47\textwidth}
+    \card{Varietà di capitalismo}{Lo Stato coordina salari, formazione e investimenti: politiche compensative, debito e aggiustamento lento.\\[0.2em]{\scriptsize\color{muted}\citet{molina2007}; \citet{hassel2014}}}
+    \vspace{0.8em}
+    \card{Le riforme per entrare}{Scelte fatte per qualificarsi all’euro, ben intenzionate ma dannose nel lungo periodo.\\[0.2em]{\scriptsize\color{muted}\citet{baccaro2022}}}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.2}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Riforme per l’euro, meno investimenti}{2 · Integrazione nell’euro}
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \cardrule{\color{ink}\bfseries Privatizzazioni\par}
+    \small
+    \begin{itemize}
+      \item Vendite rapide ad alte valutazioni, spesso prima di una regolazione adeguata
+      \item Dopo la vendita: dividendi in forte aumento, investimenti in calo \citep{barucci2007}
+      \item Spariscono grandi imprese nei settori avanzati, nicchia un tempo occupata dall’IRI
+    \end{itemize}
+    \column{0.47\textwidth}
+    \cardrule{\color{ink}\bfseries Mercato del lavoro\par}
+    \small
+    \begin{itemize}
+      \item Flessibilità al margine, precarietà concentrata sui giovani
+      \item Capitale umano accumulato: $-$13\% tra le coorti entrate nel 1995 e nel 2005 \citep{hoffmann2021}
+      \item Emigrazione di italiani: da 40–50 mila l’anno prima del 2008 a oltre 120 mila nel 2019–20
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \nota{Salari e produttività scendono insieme: il costo del lavoro per unità di prodotto non migliora.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.2, fig.~12; Istat}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Perché l’euro, da solo, non basta}{2 · Integrazione nell’euro}
+  \vspace{0.4em}
+  \riga{Nessun boom di domanda}{La teoria prevede forti disavanzi correnti. Spagna, Grecia e Portogallo arrivano al 15\% del PIL; l’Italia resta a $-$0,8\% in media nel 1999–2008.}
+  \riga{Salari alti o bassi?}{Troppo alti per la competitività e troppo bassi per la domanda interna, nello stesso momento.}
+  \riga{Lo stimolo non è servito}{Allentamento fiscale nel 1998–2005, tassi reali bassi, credito in crescita: nessuna ripresa della produttività.}
+  \riga{Quale controfattuale?}{Fuori dall’euro tassi più alti; con le catene globali del valore e la Germania orientata a Est e verso la Cina, una lira debole avrebbe aiutato poco.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.2}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Troppe micro-imprese, troppa gestione familiare}{3 · Prospettiva d’impresa}
+  \vspace{0.6em}
+  \begin{columns}[T]
+    \column{0.31\textwidth}
+    \statcard{oltre 40\%}{degli occupati lavora in micro-imprese da 1 a 9 addetti; circa 20\% in Germania e Francia}
+    \column{0.31\textwidth}
+    \statcard{circa $-$50\%}{la produttività delle micro-imprese rispetto alle omologhe francesi e tedesche; sopra i 10 addetti il divario si chiude}
+    \column{0.31\textwidth}
+    \statcard{oltre 2/3}{delle imprese familiari con più di 10 addetti ha un management interamente familiare: altrove è un’eccezione}
+  \end{columns}
+  \vfill
+  \nota{\citet{pellegrino2017}: poca meritocrazia, quindi poca riorganizzazione per sfruttare l’ICT. Questo canale spiegherebbe fino a due terzi del divario di crescita della produttività nel 1996–2006.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.3; \citet{bugamelli2018}; OCSE}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Perché le imprese italiane restano piccole}{3 · Prospettiva d’impresa}
+  \vspace{0.4em}
+  \riga{Storia}{Negli anni ’70–’80 si indeboliscono le grandi imprese private e pubbliche: shock petroliferi, autunno caldo, cattiva gestione, successioni fallite (Montecatini, Olivetti).}
+  \riga{Regole del lavoro}{La soglia dei 15 addetti frena la crescita \citep{lenzu2019}; ma le imprese nascono già più piccole e crescono meno a lungo.}
+  \riga{Fisco}{L’evasione tollerata nelle piccole imprese riduce la dimensione media del 25\% rispetto a un controllo perfetto \citep{bobbio2016}.}
+  \riga{Giustizia}{Tempi di esecuzione dei contratti più brevi del 10\%: dimensione media della manifattura più alta del 2\% \citep{giacomelli2017}.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.3; \citet{amatori2013}}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{L’ambiente istituzionale pesa su tutte le imprese}{3 · Prospettiva d’impresa}
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \statcard{1.120 giorni}{durata media di una causa commerciale in primo grado, contro 645 nella media UE}
+    \vspace{1em}
+    \statcard{$-$15\%}{PIL pro capite di Puglia e Basilicata dopo trent’anni di insediamento della criminalità organizzata \citep{pinotti2015}}
+    \column{0.47\textwidth}
+    \statcard{+9\%}{produttività se tutte le province avessero l’efficienza amministrativa delle migliori \citep{giordano2020}}
+    \vspace{1em}
+    \statcard{circa 20\% del PIL}{stock di investimenti diretti esteri in entrata: Germania 26\%, Francia 32\%, media UE 63\%}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.3; Banca Mondiale; OCSE}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Spiega il livello, meno il timing e la politica}{3 · Prospettiva d’impresa}
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \cardrule{\color{ink}\bfseries Che cosa aggiunge\par}
+    \small
+    \begin{itemize}
+      \item Meccanismi micro misurabili: dimensione, gestione, adozione dell’ICT
+      \item Scioglie il paradosso dei salari: con un management debole e avverso al rischio, salari bassi non spingono gli investimenti, mentre la bassa produttività tiene alto il costo del lavoro per unità di prodotto
+    \end{itemize}
+    \column{0.47\textwidth}
+    \cardrule{\color{ink}\bfseries Che cosa manca\par}
+    \small
+    \begin{itemize}
+      \item La domanda: per crescere conta quanto l’efficienza \citep{pozzi2016}
+      \item Il timing: tratti persistenti spiegano il livello più della svolta, salvo il canale ICT
+      \item La politica: perché problemi noti da decenni non vengono risolti?
+    \end{itemize}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, sez.~4.3}
+\end{frame}
+
+% ============================================================================
+{\altslide
+\begin{frame}{Due spiegazioni popolari che non reggono}{Due spiegazioni minori}
+  \vspace{0.6em}
+  \begin{columns}[T]
+    \column{0.47\textwidth}
+    \card{Imprese zombie e tassi troppo bassi}{Problema di identificazione: in recessione aumentano gli zombie e peggiorano le altre imprese, ma la causa comune è la recessione \citep{schivardi2020}.}
+    \column{0.47\textwidth}
+    \card{Instabilità politica}{72 governi in 77 anni, ma 31 presidenti del Consiglio e legislature stabili. Francia, Israele e Giappone hanno governi altrettanto brevi senza un rallentamento simile.}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, box 1}
+\end{frame}
+}
+
+% ============================================================================
+{\altslide
+\begin{frame}{Che cosa spiega ciascuna famiglia}{Bilancio}
+  \vspace{0.6em}
+  \small
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\color{ink}}p{0.19\textwidth}>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+     & \color{ink}\bfseries Livello del divario & \color{ink}\bfseries Svolta intorno al 2000 & \color{ink}\bfseries Persistenza dopo il 2008 & \color{ink}\bfseries Perché non si corregge \\
+    \midrule
+    Mancanza di riforme & In parte & No: riforme intense proprio allora & No & No \\[0.5em]
+    Integrazione nell’euro & In parte & Sì: coincide con l’unione monetaria & Sì: austerità e spread & In parte: vincoli di mercato \\[0.5em]
+    Prospettiva d’impresa & Sì: dimensione e gestione & Solo tramite l’ICT & Sì & No \\
+    \bottomrule
+  \end{tabularx}
+  \vfill
+  {\scriptsize\color{muted}Nostra lettura degli argomenti del paper, come base per la discussione.\par}
+  \fonte{Elaborazione su \citet{krahe2023}, sez.~4}
+  \note{Tabella non presente nel paper: sintesi per rendere esplicito il punto di Krahé. Svolta intorno al 2000 e mancata correzione dopo il 2008 sono i punti più deboli, e quelli dove la storia economica può aggiungere di più.}
+\end{frame}
+}
+
+% ============================================================================
+\begin{frame}{Primo momento, 1992–2005: la cura sbagliata}{La sintesi di Krahé}
+  \vspace{0.6em}
+  \begin{tikzpicture}[
+      box/.style={fill=paper2, inner sep=7pt, anchor=north west},
+      arr/.style={-latex, very thick, accent}]
+    \node[box] (a) at (0,0) {\passo{Rallentamento}{Anni ’70–’80: problemi strutturali, deficit, inflazione, svalutazioni}};
+    \node[box, right=0.4cm of a.north east, anchor=north west] (b) {\passo{Vincolo esterno}{Maastricht e le idee dell’epoca guidano le scelte}};
+    \node[box, right=0.4cm of b.north east, anchor=north west] (c) {\passo{Il mix}{Liberalizzazioni e forte compressione della domanda}};
+    \node[box, right=0.4cm of c.north east, anchor=north west] (d) {\passo{L’esito}{Meno investimenti e capitale umano, crescita solo estensiva}};
+    \draw[arr] (a.east) -- (b.west);
+    \draw[arr] (b.east) -- (c.west);
+    \draw[arr] (c.east) -- (d.west);
+  \end{tikzpicture}
+  \vfill
+  \nota{Riforme incoerenti \citep{simoni2020}: contrattazione centralizzata ma tutele erose; più tutela delle minoranze ma banche azioniste e partecipazioni incrociate. Né il modello tedesco né quello anglosassone.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~5}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Secondo momento, dopo il 2008: perché la cura non cambia}{La sintesi di Krahé}
+  \vspace{0.4em}
+  \riga{Lo shock}{Gli investitori scoprono che la BCE non è un prestatore di ultima istanza per i governi: lo spread sale, con un picco nel 2011.}
+  \riga{Le regole}{La nuova architettura dell’area euro, dal Fiscal Compact al pareggio in Costituzione, spinge a raddoppiare la stessa ricetta.}
+  \riga{Il meccanismo}{Paura della punizione dei mercati \citep{moschella2017}, razionale data l’architettura \citep{degrauwe2013}, o fiducia persistente nella ricetta? Il paper lo rimette agli archivi.}
+  \vfill
+  \nota{Risultato: una trappola della stagnazione, fatta di aspettative basse, investimenti bassi e isteresi \citep{benigno2018}.}
+  \fonte{Fonte: \citet{krahe2023}, sez.~5}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Sotto i singoli fattori, una struttura comune?}{La sintesi di Krahé}
+  \begin{columns}[c]
+    \column{0.6\textwidth}
+    \cardrule{\color{ink}\bfseries Radici negli anni ’70–’80\par}
+    \small
+    \begin{itemize}
+      \item Tribunali intasati, contrattazione inflazionistica, grandi imprese lontane dalla frontiera
+      \item Poco capitale sociale e civismo \citep{putnam1993}: più costosi quando la crescita passa dall’imitazione alla riallocazione e all’innovazione
+      \item La sfida: passare da un capitalismo estrattivo a uno cooperativo e inclusivo
+    \end{itemize}
+    \column{0.34\textwidth}
+    \cardrule
+    \hugenum{$\approx$\,60\%}\par\vspace{0.4em}
+    {\small della varianza di 56 indicatori strutturali in 21 regioni è colta da un’unica componente principale, strettamente correlata con la produttività regionale \citep{imf2022b}\par}
+  \end{columns}
+  \fonte{Fonte: \citet{krahe2023}, sez.~5–6; \citet{imf2022b}}
+\end{frame}
+
+% ============================================================================
+\begin{frame}{Limiti del paper, letti da storici economici}{Per la discussione}
+  \vspace{0.4em}
+  \riga{Nessun test}{Una rassegna: non c’è evidenza che discrimini tra le ipotesi. Gli unici controfattuali riguardano il debito.}
+  \riga{Il primo distacco}{La divergenza dalla frontiera inizia negli anni ’80, ma la sintesi parte dagli anni ’90: il primo rallentamento è descritto, non spiegato.}
+  \riga{Misura e confronti}{PIL per ora e non TFP; confronto con soli tre paesi: Germania, Francia, Spagna.}
+  \riga{Temi in nota}{Concorrenza cinese, specializzazione settoriale e demografia restano ai margini.}
+  \riga{La politica}{Il perché della persistenza è rinviato agli archivi; l’autore si dichiara non specialista di storia italiana.}
+  \fonte{Valutazione nostra}
+\end{frame}
+
+% ============================================================================
+{\altslide
+\begin{frame}{Cinque linee per un progetto di lungo periodo}{Per la discussione}
+  \vspace{0.4em}
+  \riga{\color{accent}1\quad\color{ink}Datazione}{Quando, in quali settori e in quali regioni inizia la divergenza: anni ’70, ’80 o ’90?}
+  \riga{\color{accent}2\quad\color{ink}Imprese}{Dimensione, governance familiare e scomparsa delle grandi imprese nel lungo periodo.}
+  \riga{\color{accent}3\quad\color{ink}Riforme}{Lavoro, privatizzazioni e giustizia come quasi-esperimenti: effetti per regione, settore e coorte.}
+  \riga{\color{accent}4\quad\color{ink}Idee e decisioni}{L’economia politica del vincolo esterno negli archivi: Banca d’Italia, Tesoro, istituzioni europee.}
+  \riga{\color{accent}5\quad\color{ink}Istituzioni}{Capitale sociale e qualità della PA: persistenza di lungo periodo o esito di shock?}
+  \fonte{Proposta per la discussione}
+\end{frame}
+}
+
+% ============================================================================
+{\darkslide
+\begin{frame}{Necessaria o sufficiente?}{Discussione}
+  \vfill
+  \large
+  \begin{itemize}\setlength{\itemsep}{1em}
+    \item Quale spiegazione consideriamo necessaria, e quale solo concomitante?
+    \item Che tipo di evidenza storica può discriminare tra le ipotesi?
+    \item Dove abbiamo un vantaggio comparato: dati, archivi, competenze?
+  \end{itemize}
+  \vfill
+\end{frame}
+}
+
+% ============================================================================
+\begin{frame}[allowframebreaks]{Riferimenti}{Bibliografia}
+  \tiny
+  \bibliographystyle{plainnat-it}
+  \bibliography{references}
+\end{frame}
+
+\end{document}
